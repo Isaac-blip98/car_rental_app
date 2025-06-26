@@ -1,0 +1,19 @@
+###Register
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "securePassword123",
+  "name": "John Doe",
+  "phone": "+254700123456"
+}
+
+###Login
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "ndiranguelvis97@gmail.com",
+  "password": "elvis123"
+}

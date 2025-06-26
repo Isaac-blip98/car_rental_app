@@ -1,0 +1,186 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String             @id @default(uuid())
+  email        String             @unique
+  phone        String?            @unique
+  password     String
+  role         Role               @default(CUSTOMER)
+  name         String
+  verified     Boolean            @default(false)
+  profileImage String?
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  agentProfile AgentProfile?
+  bookings     Booking[]
+  couponUses   CouponRedemption[]
+  payments     Payment[]
+  reviews      Review[]
+}
+
+model AgentProfile {
+  id     String  @id @default(uuid())
+  userId String  @unique
+  branch String?
+  user   User    @relation(fields: [userId], references: [id])
+}
+
+model VehicleCategory {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  description String?
+  vehicles    Vehicle[]
+}
+
+model VehicleFeature {
+  id       String                  @id @default(uuid())
+  name     String                  @unique
+  vehicles VehicleFeatureMapping[]
+}
+
+model VehicleFeatureMapping {
+  id        String         @id @default(uuid())
+  vehicleId String
+  featureId String
+  feature   VehicleFeature @relation(fields: [featureId], references: [id])
+  vehicle   Vehicle        @relation(fields: [vehicleId], references: [id])
+}
+
+model Vehicle {
+  id           String                  @id @default(uuid())
+  title        String
+  description  String?
+  location     String
+  dailyRate    Float
+  hourlyRate   Float
+  isAvailable  Boolean                 @default(true)
+  fuelType     FuelType
+  transmission Transmission
+  ac           Boolean                 @default(true)
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
+  categoryId   String
+  availability Availability[]
+  bookings     Booking[]
+  reviews      Review[]
+  category     VehicleCategory         @relation(fields: [categoryId], references: [id])
+  features     VehicleFeatureMapping[]
+  images       VehicleImage[]
+}
+
+model VehicleImage {
+  id        String  @id @default(uuid())
+  url       String
+  isPrimary Boolean @default(false)
+  vehicleId String
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id])
+}
+
+model Availability {
+  id          String   @id @default(uuid())
+  vehicleId   String
+  startDate   DateTime
+  endDate     DateTime
+  isAvailable Boolean  @default(true)
+  vehicle     Vehicle  @relation(fields: [vehicleId], references: [id])
+}
+
+model Booking {
+  id        String            @id @default(uuid())
+  userId    String
+  vehicleId String
+  startDate DateTime
+  endDate   DateTime
+  status    BookingStatus     @default(PENDING)
+  isInstant Boolean           @default(false)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  user      User              @relation(fields: [userId], references: [id])
+  vehicle   Vehicle           @relation(fields: [vehicleId], references: [id])
+  couponUse CouponRedemption?
+  payment   Payment?
+}
+
+model Payment {
+  id          String        @id @default(uuid())
+  bookingId   String        @unique
+  userId      String
+  amount      Float
+  method      PaymentMethod
+  paymentDate DateTime      @default(now())
+  receiptUrl  String?
+  booking     Booking       @relation(fields: [bookingId], references: [id])
+  user        User          @relation(fields: [userId], references: [id])
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  userId    String
+  vehicleId String
+  rating    Int      @default(5)
+  comment   String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  vehicle   Vehicle  @relation(fields: [vehicleId], references: [id])
+}
+
+model Coupon {
+  id          String             @id @default(uuid())
+  code        String             @unique
+  discount    Float
+  validFrom   DateTime
+  validUntil  DateTime
+  usageLimit  Int?
+  usedCount   Int                @default(0)
+  isActive    Boolean            @default(true)
+  redemptions CouponRedemption[]
+}
+
+model CouponRedemption {
+  id        String   @id @default(uuid())
+  couponId  String
+  userId    String
+  bookingId String?  @unique
+  booking   Booking? @relation(fields: [bookingId], references: [id])
+  coupon    Coupon   @relation(fields: [couponId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+enum Role {
+  ADMIN
+  AGENT
+  CUSTOMER
+}
+
+enum BookingStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+  COMPLETED
+}
+
+enum FuelType {
+  PETROL
+  DIESEL
+  ELECTRIC
+  HYBRID
+}
+
+enum Transmission {
+  MANUAL
+  AUTOMATIC
+}
+
+enum PaymentMethod {
+  STRIPE
+  PAYPAL
+  FLUTTERWAVE
+}
