@@ -1,10 +1,9 @@
-import { IVehicle } from '../interfaces/vehicle.interface';
+import { Vehicle, VehicleImage } from '@prisma/client';
 
-export class VehicleResponseDto implements IVehicle {
+export class VehicleResponseDto {
   id: string;
   title: string;
   description?: string;
-  imageUrls: string[];
   location: string;
   dailyRate: number;
   hourlyRate: number;
@@ -15,8 +14,10 @@ export class VehicleResponseDto implements IVehicle {
   categoryId: string;
   createdAt: Date;
   updatedAt: Date;
+  imageUrls: string[];
 
-  constructor(vehicle: IVehicle) {
+  constructor(vehicle: Vehicle & { images: VehicleImage[] }) {
     Object.assign(this, vehicle);
+    this.imageUrls = vehicle.images.map((img) => img.url);
   }
 }

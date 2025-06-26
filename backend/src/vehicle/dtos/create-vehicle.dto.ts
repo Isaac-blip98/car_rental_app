@@ -1,4 +1,5 @@
-import { IsString, IsBoolean, IsNumber, IsArray } from 'class-validator';
+import { FuelType, Transmission } from '@prisma/client';
+import { IsString, IsBoolean, IsNumber, IsArray, IsEnum } from 'class-validator';
 
 export class CreateVehicleDto {
   @IsString()
@@ -16,11 +17,11 @@ export class CreateVehicleDto {
   @IsBoolean()
   isAvailable: boolean;
 
-  @IsString()
-  fuelType: string;
-
-  @IsString()
-  transmission: string;
+  @IsEnum(FuelType) 
+  fuelType: FuelType;
+  
+  @IsEnum(Transmission) 
+  transmission: Transmission;
 
   @IsBoolean()
   ac: boolean;
