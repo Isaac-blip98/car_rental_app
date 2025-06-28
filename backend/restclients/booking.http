@@ -1,0 +1,48 @@
+@customer_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5MjViZmM5OS1hOWYwLTRmYzMtYTJiYy0xZWY4ZWJmOTEwYjciLCJyb2xlIjoiQ1VTVE9NRVIiLCJpYXQiOjE3NTEwOTMxNjAsImV4cCI6MTc1MTY5Nzk2MH0.yh8OhkJarJqMHlB663VnQ6kHTWv--WUQTIxML7oLN78
+@admin_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhNDcwMzU4NS00NTcxLTQzZTctYjAzOC0zNWE3YzRmY2M2YWEiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NTEwOTI5NDUsImV4cCI6MTc1MTY5Nzc0NX0.yps1trJMZWpOiB36nbM5I4Gy1_p1Wk1EKxhxQxym1-0
+@agent_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZTc5ODQwOS01MDQ2LTQxODgtODgyOC01ODU5OTZkNDNkOWIiLCJyb2xlIjoiQUdFTlQiLCJpYXQiOjE3NTEwOTMwNDQsImV4cCI6MTc1MTY5Nzg0NH0.t2SAoN6iOFXeN96DF3zGPN1XyQ8eQVzoEO5IwqMaICc
+
+### Create Booking
+POST http://localhost:3000/bookings
+Authorization: Bearer {{customer_token}}
+Content-Type: application/json
+
+{
+  "vehicleId": "d81f639c-8333-418f-aeee-db1ff11d201a",
+  "startDate": "2025-07-01T10:00:00.000Z",
+  "endDate": "2025-07-03T10:00:00.000Z",
+  "isInstant": false
+}
+
+### Get My Bookings (Customer) or All (Admin/Agent)
+GET http://localhost:3000/bookings
+Authorization: Bearer {{customer_token}}
+
+### Get Booking by ID
+GET http://localhost:3000/bookings/e06b1e0a-3709-4daa-b51e-b45ef7326308
+Authorization: Bearer {{customer_token}}
+
+### Approve Booking (Admin/Agent)
+PATCH http://localhost:3000/bookings/e06b1e0a-3709-4daa-b51e-b45ef7326308/approve
+Authorization: Bearer {{admin_token}}
+
+### Reject Booking (Admin/Agent)
+PATCH http://localhost:3000/bookings/e06b1e0a-3709-4daa-b51e-b45ef7326308/reject
+Authorization: Bearer {{agent_token}}
+
+### Cancel Booking (Any Role)
+POST http://localhost:3000/bookings/:id/cancel
+Authorization: Bearer {any_token_here}}
+
+### Filter Bookings (Optional Query Parameters)
+GET http://localhost:3000/bookings/filter?status=APPROVED
+Authorization: Bearer {{admin_token  or agent_token}}
+
+### Update Booking Status (Deprecated by approve/reject)
+POST http://localhost:3000/bookings/:id/status
+Authorization: Bearer {{admin_token or agent_token}}
+Content-Type: application/json
+
+{
+  "status": "APPROVED"
+}
