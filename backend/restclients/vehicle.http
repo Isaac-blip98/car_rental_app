@@ -1,0 +1,35 @@
+@admin_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhNDcwMzU4NS00NTcxLTQzZTctYjAzOC0zNWE3YzRmY2M2YWEiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NTEwOTI5NDUsImV4cCI6MTc1MTY5Nzc0NX0.yps1trJMZWpOiB36nbM5I4Gy1_p1Wk1EKxhxQxym1-0
+@agent_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZTc5ODQwOS01MDQ2LTQxODgtODgyOC01ODU5OTZkNDNkOWIiLCJyb2xlIjoiQUdFTlQiLCJpYXQiOjE3NTEwOTMwNDQsImV4cCI6MTc1MTY5Nzg0NH0.t2SAoN6iOFXeN96DF3zGPN1XyQ8eQVzoEO5IwqMaICc
+
+### Create Vehicle (Admin/Agent only)
+POST http://localhost:3000/vehicles
+Authorization: Bearer {{admin_token or agent_token}}
+Content-Type: application/json
+
+{
+  "title": "Toyota Axio",
+  "description": "A comfortable fuel-efficient sedan",
+  "location": "Nairobi",
+  "dailyRate": 40,
+  "hourlyRate": 8,
+  "fuelType": "PETROL",
+  "transmission": "AUTOMATIC",
+  "ac": true,
+  "categoryId": "your-category-id-here",
+  "imageUrls": [
+    {
+      "url": "https://example.com/axio-front.jpg",
+      "isPrimary": true
+    },
+    {
+      "url": "https://example.com/axio-side.jpg",
+      "isPrimary": false
+    }
+  ]
+}
+
+### Get All Vehicles
+GET http://localhost:3000/vehicles
+
+### Get Single Vehicle
+GET http://localhost:3000/vehicles/:id

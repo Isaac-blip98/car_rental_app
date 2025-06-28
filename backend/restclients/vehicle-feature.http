@@ -1,0 +1,19 @@
+@admin_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhNDcwMzU4NS00NTcxLTQzZTctYjAzOC0zNWE3YzRmY2M2YWEiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NTEwOTI5NDUsImV4cCI6MTc1MTY5Nzc0NX0.yps1trJMZWpOiB36nbM5I4Gy1_p1Wk1EKxhxQxym1-0
+@agent_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZTc5ODQwOS01MDQ2LTQxODgtODgyOC01ODU5OTZkNDNkOWIiLCJyb2xlIjoiQUdFTlQiLCJpYXQiOjE3NTEwOTMwNDQsImV4cCI6MTc1MTY5Nzg0NH0.t2SAoN6iOFXeN96DF3zGPN1XyQ8eQVzoEO5IwqMaICc
+
+### Create Vehicle Feature
+POST http://localhost:3000/vehicle-features
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Bluetooth"
+}
+
+### Get All Vehicle Features
+GET http://localhost:3000/vehicle-features
+Authorization: Bearer {{admin_token}}
+
+### Delete Vehicle Feature
+DELETE http://localhost:3000/vehicle-features/7aaeed75-f48f-4867-9ec9-4fecddd2b4aa
+Authorization: Bearer {{admin_token}}

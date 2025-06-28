@@ -1,7 +1,19 @@
-import { Controller, Get, Param, NotFoundException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  NotFoundException,
+  UseGuards,
+  Post,
+  Body,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserResponseDto } from './dtos/user-response.dto';
 import { IUser } from './interfaces/user.interface';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { Role } from 'src/common/enums/roles.enum';
 
 @Controller('users')
 export class UserController {
@@ -23,4 +35,5 @@ export class UserController {
 
     return new UserResponseDto(user);
   }
+
 }

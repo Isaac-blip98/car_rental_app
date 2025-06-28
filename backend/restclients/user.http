@@ -1,7 +1,20 @@
+@admintoken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhNDcwMzU4NS00NTcxLTQzZTctYjAzOC0zNWE3YzRmY2M2YWEiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NTEwMzA3NTMsImV4cCI6MTc1MTYzNTU1M30.bM_FQP_miw-On4JM22rnmbjXAvlRafDgx_lt7C10RMo
+
 ###Get all users
 GET http://localhost:3000/users
+Authorization: Bearer {{admintoken}}
 
 
 ###Get user by id
 GET http://localhost:3000/users/{userId}
 
+### Create an agent
+POST http://localhost:3000/users/create-agent
+Content-Type: application/json
+Authorization: Bearer {{admintoken}}
+
+{
+  "email": "agent3@carrentals.com",
+  "name": "Agent Three",
+  "password": "securePassword!"
+}
