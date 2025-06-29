@@ -1,0 +1,134 @@
+<div class="min-h-screen flex flex-col">
+
+  <header class="bg-white shadow p-4 flex justify-between items-center">
+    <div class="flex items-center gap-2">
+      <i class="fa-solid fa-car text-blue-600"></i>
+      <h1 class="text-2xl font-bold text-blue-600">CarRental</h1>
+    </div>
+    <nav class="space-x-4 flex">
+      <a routerLink="/home" class="text-gray-700 hover:text-blue-500">Home</a>
+      <a routerLink="/cars" class="text-gray-700 hover:text-blue-500">Cars</a>
+      <a routerLink="/mybookings" class="text-gray-700 hover:text-blue-500"
+        >My Bookings</a
+      >
+      <a routerLink="/dashboard" class="text-gray-700 hover:text-blue-500"
+        >Dashboard</a
+      >
+      <div class="border rounded-lg flex items-center">
+        <input type="text" /><i class="fa-solid fa-magnifying-glass"></i>
+      </div>
+      <a routerLink="/login" class="text-gray-700 hover:text-blue-500">Login</a>
+      <a routerLink="/register" class="text-gray-700 hover:text-blue-500"
+        >Register</a
+      >
+    </nav>
+  </header>
+
+  <section
+    class="flex-1 bg-cover bg-center flex mt-20 justify-center"
+    style="
+      background-image: url('https://source.unsplash.com/1600x900/?car,rental');
+    "
+  >
+    <div class="p-2 rounded-lg text-center mt-10">
+      <h2 class="text-6xl text-black font-bold">Find Your Perfect Ride</h2>
+      <div
+        class="h-24 mt-10 bg-white rounded-full shadow-xl flex items-center justify-between px-6 space-x-4 w-full max-w-5xl mx-auto"
+      >
+        <div>
+          <select
+            [(ngModel)]="location"
+            class="px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="" disabled selected>Pickup Location</option>
+            <option *ngFor="let loc of locations" [value]="loc">
+              {{ loc }}
+            </option>
+          </select>
+          <span class="text-gray-400 block">Please Select a Location</span>
+        </div>
+
+        <div class="block">
+          <label for="pickupDate" class="text-gray-400 block">
+            Pickup Date</label
+          >
+          <input
+            type="date"
+            [(ngModel)]="pickupDate"
+            id="pickupDate"
+            class="px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div class="block">
+          <label for="returnDate" class="text-gray-400 mb-1 block"
+            >Return Date</label
+          >
+          <input
+            type="date"
+            [(ngModel)]="returnDate"
+            id="returnDate"
+            class="px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <button
+          (click)="search()"
+          class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition flex items-center gap-4 mt-4"
+        >
+          Search <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </div>
+
+      <div class="w-full h-1/2 mt-6">
+        <img
+          src="/main_car.png"
+          class="h-full w-full object-cover"
+          alt="Range"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white">
+    <div class="flex flex-col items-center gap-4 mt-20">
+      <h1 class="text-5xl">Featured Vehicles</h1>
+      <span class="text-gray-500"
+        >Explore our selection of premium vehicles available for your nest
+        adventure</span
+      >
+    </div>
+
+<div
+  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10 px-6"
+>
+  <div *ngFor="let car of featuredCars">
+    <div
+      class="bg-white rounded-xl shadow-lg overflow-hidden transition-transform hover:scale-105"
+    >
+      <img
+        [src]="car.imageUrls?.[0] || '/placeholder.jpg'"
+        alt="{{ car.title }}"
+        class="w-full h-48 object-cover"
+      />
+      <div class="p-4">
+        <h2 class="text-xl font-bold text-gray-800 mb-1">
+          {{ car.title }}
+        </h2>
+        <p class="text-gray-500 mb-1">{{ car.location }}</p>
+        <p class="text-green-600 font-semibold text-lg">
+          {{ car.dailyRate | currency:'KES':'symbol':'1.0-0' }}/day
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="text-center mt-8">
+  <a
+    routerLink="/cars"
+    class="inline-block bg-blue-600 text-white px-6 py-2 rounded-full shadow hover:bg-blue-700 transition"
+  >
+    Explore All Cars
+  </a>
+</div>
+  </section>
+</div>

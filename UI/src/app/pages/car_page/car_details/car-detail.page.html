@@ -1,0 +1,77 @@
+<div class="max-w-7xl mx-auto p-6">
+
+  <a routerLink="/cars" class="text-gray-600 hover:underline mb-4 inline-block">
+    ← Back to all cars
+  </a>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+    <div class="lg:col-span-2">
+      <img
+        [src]="car.imageUrls[0]"
+        alt="{{ car.title }}"
+        class="w-full h-96 object-cover rounded-lg mb-6"
+      />
+
+      <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ car.title }}</h1>
+      <p class="text-gray-500 mb-4">{{ car.year }} • {{ car.category }}</p>
+
+      <!-- Tags -->
+      <div class="flex flex-wrap gap-3 mb-6">
+        <span class="px-4 py-2 rounded bg-gray-100 text-sm text-gray-700">
+          {{ car.seats }} Seats
+        </span>
+        <span class="px-4 py-2 rounded bg-gray-100 text-sm text-gray-700">
+          {{ car.fuelType }}
+        </span>
+        <span class="px-4 py-2 rounded bg-gray-100 text-sm text-gray-700">
+          {{ car.transmission }}
+        </span>
+        <span class="px-4 py-2 rounded bg-gray-100 text-sm text-gray-700">
+          {{ car.location }}
+        </span>
+      </div>
+
+      <!-- Description -->
+      <h2 class="text-lg font-semibold mb-2">Description</h2>
+      <p class="text-gray-600 mb-6 leading-relaxed">{{ car.description }}</p>
+
+      <!-- Features -->
+      <h2 class="text-lg font-semibold mb-2">Features</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm text-blue-600">
+        <div *ngFor="let feature of car.features" class="flex items-center gap-2">
+          <i class="fa-solid fa-check"></i>
+          {{ feature }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Booking Sidebar -->
+    <div class="bg-white rounded-lg shadow p-6 h-fit">
+      <div class="text-3xl font-bold text-gray-800 mb-1">
+        Ksh {{ car.dailyRate | number }}
+      </div>
+      <p class="text-gray-500 mb-4">per day</p>
+
+      <form class="flex flex-col gap-4">
+        <div>
+          <label class="text-sm text-gray-600">Pickup Date</label>
+          <input type="date" class="w-full border rounded px-3 py-2" />
+        </div>
+        <div>
+          <label class="text-sm text-gray-600">Return Date</label>
+          <input type="date" class="w-full border rounded px-3 py-2" />
+        </div>
+        <button
+          type="button"
+          class="bg-blue-600 text-white rounded py-2 mt-2 hover:bg-blue-700 transition"
+        >
+          Book Now
+        </button>
+        <p class="text-xs text-gray-500 text-center">
+          No credit card required to reserve
+        </p>
+      </form>
+    </div>
+  </div>
+</div>

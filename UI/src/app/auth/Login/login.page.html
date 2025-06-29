@@ -1,0 +1,49 @@
+<div class="fixed inset-0 bg-white-700 bg-opacity-30 backdrop-blur-sm z-50 flex items-center justify-center px-4">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
+
+    <button (click)="close()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">
+      <i class="fa-solid fa-xmark text-xl"></i>
+    </button>
+
+    <h2 class="text-2xl font-bold mb-4 text-center">Login</h2>
+
+    <p *ngIf="errorMessage" class="text-red-600 text-sm mb-2 text-center">
+      {{ errorMessage }}
+    </p>
+
+    <form (ngSubmit)="login()" class="space-y-4">
+      <input
+        type="email"
+        [(ngModel)]="email"
+        name="email"
+        required
+        placeholder="Email"
+        class="w-full border border-gray-300 p-2 rounded focus:outline-blue-500"
+      />
+      <input
+        type="password"
+        [(ngModel)]="password"
+        name="password"
+        required
+        placeholder="Password"
+        class="w-full border border-gray-300 p-2 rounded focus:outline-blue-500"
+      />
+
+      <button
+        type="submit"
+        class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition"
+      >
+        Login
+      </button>
+    </form>
+
+    <div class="mt-4 text-sm text-center text-gray-600">
+      <a routerLink="/forgot-password" class="text-blue-600 hover:underline">Forgot Password?</a>
+    </div>
+
+    <div class="mt-2 text-sm text-center text-gray-600">
+      Don’t have an account?
+      <a routerLink="/register" class="text-blue-600 hover:underline">Sign up</a>
+    </div>
+  </div>
+</div>

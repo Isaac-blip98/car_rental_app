@@ -32,4 +32,4 @@ Content-Type: application/json
 GET http://localhost:3000/vehicles
 
 ### Get Single Vehicle
-GET http://localhost:3000/vehicles/:id
+GET http://localhost:3000/vehicles/d81f639c-8333-418f-aeee-db1ff11d201a

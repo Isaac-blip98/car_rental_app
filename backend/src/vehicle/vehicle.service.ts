@@ -2,22 +2,30 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateVehicleDto } from './dtos/create-vehicle.dto';
 import { VehicleResponseDto } from './dtos/vehicle-response.dto';
-import { Vehicle, VehicleImage } from '@prisma/client';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
 export class VehicleService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private cloudinary: CloudinaryService,
+  ) {}
 
-  async create(dto: CreateVehicleDto): Promise<VehicleResponseDto> {
-    const { imageUrls, ...vehicleData } = dto;
+  async create(
+    dto: CreateVehicleDto,
+    images: Express.Multer.File[],
+  ): Promise<VehicleResponseDto> {
+    const uploadedImages = await Promise.all(
+      images.map((file) => this.cloudinary.uploadFile(file)),
+    );
 
     const vehicle = await this.prisma.vehicle.create({
       data: {
-        ...vehicleData,
+        ...dto,
         images: {
-          create: imageUrls.map((url, index) => ({
-            url,
-            isPrimary: index === 0, 
+          create: uploadedImages.map((img, i) => ({
+            url: img.secure_url,
+            isPrimary: i === 0,
           })),
         },
       },

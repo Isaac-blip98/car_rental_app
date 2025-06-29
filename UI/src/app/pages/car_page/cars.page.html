@@ -1,0 +1,87 @@
+<header class="bg-white shadow p-4 flex justify-between items-center">
+  <div class="flex items-center gap-2">
+    <i class="fa-solid fa-car text-blue-600"></i>
+    <h1 class="text-2xl font-bold text-blue-600">CarRental</h1>
+  </div>
+  <nav class="space-x-4 flex">
+    <a routerLink="/home" class="text-gray-700 hover:text-blue-500">Home</a>
+    <a routerLink="/cars" class="text-gray-700 hover:text-blue-500">Cars</a>
+    <a routerLink="/mybookings" class="text-gray-700 hover:text-blue-500"
+      >My Bookings</a
+    >
+    <a routerLink="/dashboard" class="text-gray-700 hover:text-blue-500"
+      >Dashboard</a
+    >
+    <div class="border rounded-lg flex items-center">
+      <input type="text" /><i class="fa-solid fa-magnifying-glass"></i>
+    </div>
+    <a routerLink="/login" class="text-gray-700 hover:text-blue-500">Login</a>
+    <a routerLink="/register" class="text-gray-700 hover:text-blue-500"
+      >Register</a
+    >
+  </nav>
+</header>
+
+<section class="flex flex-col items-center gap-20">
+  <div class="flex flex-col items-center gap-4">
+    <h1 class="text-4xl font-bold mt-20">Available Cars</h1>
+    <span class="text-gray-500"
+      >Browse our selection of premium vehicles available for your next
+      adventure</span
+    >
+    <form class="mt-4">
+      <div
+        class="flex items-center gap-4 bg-white px-6 py-2 rounded-full hover:bg-blue-200 transition"
+      >
+        <i class="fa-solid fa-magnifying-glass text-gray-500"></i>
+
+        <input
+          type="search"
+          placeholder="Search by Make, Model or Features"
+          class="flex-1 bg-transparent focus:outline-none text-gray-700"
+        />
+
+        <button type="button">
+          <i class="fa-solid fa-filter text-gray-500"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="p-6 bg-white w-screen h-screen mt-10">
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10 px-6"
+    >
+      <div *ngFor="let car of cars">
+        <div
+          class="bg-white rounded-xl shadow-lg overflow-hidden transition-transform hover:scale-105"
+        >
+          <img
+            [src]="car.imageUrls?.[0] || '/placeholder.jpg'"
+            alt="{{ car.title }}"
+            class="w-full h-48 object-cover"
+          />
+          <div class="p-4">
+            <h2 class="text-xl font-bold text-gray-800 mb-2">
+              {{ car.title }}
+            </h2>
+            <p class="text-gray-600 mb-1"> {{ car.location }}</p>
+            <p class="text-green-600 font-semibold mb-2">
+              {{ car.dailyRate | currency:'KES':'symbol':'1.0-0' }}/day
+            </p>
+            <a
+              [routerLink]="['/cars', car.id]"
+              class="inline-block text-blue-600 hover:text-blue-800 font-medium"
+            >
+              View Details →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #loading>
+      <p>Loading cars...</p>
+    </ng-template>
+  </div>
+</section>

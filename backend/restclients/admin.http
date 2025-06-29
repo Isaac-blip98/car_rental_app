@@ -1,0 +1,41 @@
+@admin_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhNDcwMzU4NS00NTcxLTQzZTctYjAzOC0zNWE3YzRmY2M2YWEiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NTEwOTI5NDUsImV4cCI6MTc1MTY5Nzc0NX0.yps1trJMZWpOiB36nbM5I4Gy1_p1Wk1EKxhxQxym1-0
+
+### Login as Admin (to get token)
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "ndiranguelvis97@gmail.com",
+  "password": "elvis123"
+}
+
+### Get Admin Dashboard Stats
+GET http://localhost:3000/admin/stats
+Authorization: Bearer {{admin_token}}
+
+###  Get All Users
+GET http://localhost:3000/admin/users
+Authorization: Bearer {{admin_token}}
+
+
+### Get User by ID
+GET http://localhost:3000/admin/users/:id
+Authorization: Bearer {{admin_token}}
+
+
+### Create Agent
+POST http://localhost:3000/admin/users/agents
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "email": "agent1@example.com",
+  "password": "agentpass",
+  "name": "Agent One",
+  "phone": "0712345678"
+}
+
+### 🗑 Delete User by ID
+DELETE http://localhost:3000/admin/users/:id
+Authorization: Bearer  {{admin_token}}
+

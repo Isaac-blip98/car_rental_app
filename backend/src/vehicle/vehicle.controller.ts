@@ -1,4 +1,14 @@
-import { Controller, Post, Body, Get, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  UploadedFiles,
+  UseInterceptors,
+  UseGuards,
+} from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { VehicleService } from './vehicle.service';
 import { CreateVehicleDto } from './dtos/create-vehicle.dto';
 import { VehicleResponseDto } from './dtos/vehicle-response.dto';
@@ -13,9 +23,13 @@ export class VehicleController {
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.AGENT) 
-  create(@Body() dto: CreateVehicleDto): Promise<VehicleResponseDto> {
-    return this.vehicleService.create(dto);
+  @Roles(Role.ADMIN, Role.AGENT)
+  @UseInterceptors(FilesInterceptor('images')) 
+  create(
+    @Body() dto: CreateVehicleDto,
+    @UploadedFiles() images: Express.Multer.File[],
+  ): Promise<VehicleResponseDto> {
+    return this.vehicleService.create(dto, images);
   }
 
   @Get()
