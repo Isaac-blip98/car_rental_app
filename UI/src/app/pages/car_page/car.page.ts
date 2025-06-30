@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { VehicleService } from '../../services/vehicle.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   standalone: true,
@@ -10,6 +11,7 @@ import { VehicleService } from '../../services/vehicle.service';
   imports: [CommonModule, RouterModule],
 })
 export class CarsPage implements OnInit {
+  currentUser: any = null;
   cars: any[] = [];
   location = '';
   pickupDate = '';
@@ -17,10 +19,13 @@ export class CarsPage implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private vehicleService: VehicleService
+    private vehicleService: VehicleService,
+    private router: Router,
+    private auth: AuthService
   ) {}
 
   ngOnInit() {
+    this.currentUser = this.auth.getCurrentUser();
     this.route.queryParams.subscribe((params) => {
       this.location = params['location'];
       this.pickupDate = params['pickupDate'];
@@ -28,6 +33,10 @@ export class CarsPage implements OnInit {
     });
 
     this.fetchCars();
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.currentUser;
   }
 
   fetchCars() {
@@ -40,5 +49,10 @@ export class CarsPage implements OnInit {
         this.cars = res;
       }
     });
+  }
+
+  logout() {
+    this.auth.logout();
+    this.router.navigate(['/home']);
   }
 }

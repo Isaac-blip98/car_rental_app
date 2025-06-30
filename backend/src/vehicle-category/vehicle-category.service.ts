@@ -34,7 +34,7 @@ export class VehicleCategoryService {
     if (!category) throw new NotFoundException('Category not found');
 
     const linkedVehicle = await this.prisma.vehicle.findFirst({
-      where: { categoryId: id },
+      where: { id: category.id },
     });
 
     if (linkedVehicle) {

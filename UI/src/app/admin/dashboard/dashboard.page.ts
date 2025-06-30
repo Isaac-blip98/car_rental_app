@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AdminService } from '../../services/admin.service';
+import { SystemStats } from '../../interfaces/system-stats.interface';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   standalone: true,
@@ -10,12 +12,23 @@ import { AdminService } from '../../services/admin.service';
   imports: [CommonModule, RouterModule],
 })
 export class AdminDashboardPage implements OnInit {
-  stats: any = null;
+  currentUser: any = null;
+  stats: SystemStats | null = null;
   loading = true;
 
-  constructor(private adminService: AdminService) {}
+  constructor(private adminService: AdminService, private auth: AuthService, private router: Router) {}
 
   ngOnInit() {
+    this.currentUser = this.auth.getCurrentUser();
+
+    if (
+      !this.currentUser ||
+      !['ADMIN', 'AGENT'].includes(this.currentUser.role)
+    ) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
     this.adminService.getStats().subscribe({
       next: (data) => {
         this.stats = data;
@@ -26,5 +39,10 @@ export class AdminDashboardPage implements OnInit {
         this.loading = false;
       },
     });
+  }
+
+  logout() {
+    this.auth.logout();
+    this.router.navigate(['/home']);
   }
 }

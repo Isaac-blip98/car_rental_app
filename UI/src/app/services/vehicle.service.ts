@@ -15,4 +15,22 @@ export class VehicleService {
   getVehicleById(id: string): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/vehicles/${id}`);
   }
+
+  deleteVehicle(id: string) {
+    return this.http.delete(`${this.baseUrl}/${id}`);
+  }
+
+  toggleAvailability(id: string, isAvailable: boolean) {
+    return this.http.patch(`${this.baseUrl}/${id}/availability`, {
+      isAvailable,
+    });
+  }
+  bookCar(data: {
+    vehicleId: string;
+    startDate: string;
+    endDate: string;
+    isInstant?: boolean;
+  }) {
+    return this.http.post('/api/bookings', data);
+  }
 }

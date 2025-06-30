@@ -1,40 +1,64 @@
-  <header class="bg-white shadow p-4 flex justify-between items-center border">
-    <div class="flex items-center gap-2">
-      <i class="fa-solid fa-car text-blue-600"></i>
-      <h1 class="text-2xl font-bold text-blue-600">CarRental</h1>
+<header class="bg-white shadow p-4 flex justify-between items-center border">
+  <div class="flex items-center gap-2">
+    <i class="fa-solid fa-car text-blue-600"></i>
+    <h1 class="text-2xl font-bold text-blue-600">CarRental</h1>
+  </div>
+  <nav class="space-x-4 flex">
+    <a routerLink="/home" class="text-gray-700 hover:text-blue-500">Home</a>
+    <a routerLink="/cars" class="text-gray-700 hover:text-blue-500">Cars</a>
+    <a routerLink="/mybookings" class="text-gray-700 hover:text-blue-500"
+      >My Bookings</a
+    >
+    <a routerLink="/dashboard" class="text-gray-700 hover:text-blue-500"
+      >Dashboard</a
+    >
+    <div class="border rounded-lg flex items-center">
+      <input type="text" /><i class="fa-solid fa-magnifying-glass"></i>
     </div>
-    <nav class="space-x-4 flex">
-      <a routerLink="/home" class="text-gray-700 hover:text-blue-500">Home</a>
-      <a routerLink="/cars" class="text-gray-700 hover:text-blue-500">Cars</a>
-      <a routerLink="/mybookings" class="text-gray-700 hover:text-blue-500"
-        >My Bookings</a
-      >
-      <a routerLink="/dashboard" class="text-gray-700 hover:text-blue-500"
-        >Dashboard</a
-      >
-      <div class="border rounded-lg flex items-center">
-        <input type="text" /><i class="fa-solid fa-magnifying-glass"></i>
-      </div>
-      <a routerLink="/login" class="text-gray-700 hover:text-blue-500">Login</a>
-      <a routerLink="/register" class="text-gray-700 hover:text-blue-500"
-        >Register</a
-      >
-    </nav>
-  </header>
-
+    <a
+      *ngIf="!currentUser"
+      routerLink="/login"
+      class="text-gray-700 hover:text-blue-500"
+      >Login</a
+    >
+    <a
+      *ngIf="!currentUser"
+      routerLink="/register"
+      class="text-gray-700 hover:text-blue-500"
+      >Register</a
+    >
+    <span *ngIf="currentUser" class="text-gray-700"
+      >Welcome, {{ currentUser.name }}</span
+    >
+    <button
+      *ngIf="currentUser"
+      (click)="logout()"
+      class="text-gray-700 hover:text-blue-500"
+    >
+      Logout
+    </button>
+  </nav>
+</header>
 
 <div class="min-h-screen flex">
-<aside class="w-64 bg-white shadow text-gray-700 p-6 border">
-  <h2 class="text-xl font-bold mb-6">Admin Panel</h2>
-  <nav class="space-y-4">
-    <a routerLink="./" class="block hover:text-blue-500">Overview</a>
-    <a routerLink="./vehicles" class="block hover:text-blue-500">Add Car</a>
-    <a routerLink="./categories" class="block hover:text-blue-500">Manage Cars</a>
-    <a routerLink="./bookings" class="block hover:text-blue-500">Manage Bookings</a>
-  </nav>
-</aside>
+  <aside class="w-64 bg-white shadow text-gray-700 p-6 border">
+    <h2 class="text-xl font-bold mb-6">Admin Panel</h2>
+    <nav class="space-y-4">
+      <div *ngIf="currentUser.role === 'ADMIN'" class="space-y-4">
+        <a routerLink="./" class="block hover:text-blue-500">Overview</a>
+        <a routerLink="./vehicles" class="block hover:text-blue-500">Add Car</a>
+        <a routerLink="./manage-cars" class="block hover:text-blue-500"
+          >Manage Cars</a
+        >
+      </div>
 
-<main class="flex-1 p-10 bg-gray-100">
-  <router-outlet></router-outlet>
-</main>
+      <a routerLink="./bookings" class="block hover:text-blue-500"
+        >Manage Bookings</a
+      >
+    </nav>
+  </aside>
+
+  <main class="flex-1 p-10 bg-gray-100">
+    <router-outlet></router-outlet>
+  </main>
 </div>

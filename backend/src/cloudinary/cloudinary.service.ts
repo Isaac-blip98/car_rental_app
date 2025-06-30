@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 import { ConfigService } from '@nestjs/config';
-import { Readable } from 'stream';
 import toStream from 'buffer-to-stream';
 
 @Injectable()

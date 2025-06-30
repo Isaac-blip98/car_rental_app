@@ -1,8 +1,11 @@
-export interface IVehicle {
+export interface Vehicle {
   id: string;
   title: string;
+  brand: string;
+  model: string;
+  year: number;
+  seatingCapacity: number;
   description?: string;
-  imageUrls: string[]; 
   location: string;
   dailyRate: number;
   hourlyRate: number;

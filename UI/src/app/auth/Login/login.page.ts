@@ -19,6 +19,7 @@ export class LoginPage {
 
   login() {
     this.auth.login(this.email, this.password).then(user => {
+        setTimeout(() => {
       if (user.role === 'ADMIN') {
         this.router.navigate(['/dashboard']);
       } else if (user.role === 'AGENT') {
@@ -26,6 +27,7 @@ export class LoginPage {
       } else {
         this.router.navigate(['/home']);
       }
+    },0);
     }).catch(err => {
       this.errorMessage = err.message || 'Invalid credentials';
     });

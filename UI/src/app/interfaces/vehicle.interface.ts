@@ -14,3 +14,14 @@ export interface IVehicle {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface Vehicle {
+  id: string;
+  title: string;
+  imageUrls: string[];
+  transmission: string;
+  seatingCapacity: number;
+  category: string;
+  dailyRate: number;
+  isAvailable: boolean;
+}

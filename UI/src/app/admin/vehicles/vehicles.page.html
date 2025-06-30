@@ -4,9 +4,10 @@
   availability, and specifications.
 </p>
 
-<form class="space-y-4" (ngSubmit)="submitVehicle()">
+<div *ngIf="formError" class="text-red-600 mb-4">{{ formError }}</div>
 
-    <div class="border-2 border-dashed border-gray-300 rounded p-4 text-center">
+<form class="space-y-4" (ngSubmit)="submitVehicle()">
+  <div class="border-2 border-dashed border-gray-300 rounded p-4 text-center">
     <input
       type="file"
       (change)="onImageSelected($event)"
@@ -73,14 +74,16 @@
         required
       />
     </div>
-    <div>
-      <label class="block mb-1 text-gray-700">Category</label>
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">Category</label>
       <select
         [(ngModel)]="category"
         name="category"
-        class="border p-2 rounded w-full"
+        class="mt-1 block w-full border rounded px-3 py-2"
+        required
       >
-        <option *ngFor="let cat of categories" [value]="cat.name">
+        <option value="" disabled>Select a category</option>
+        <option *ngFor="let cat of categories" [value]="cat.id">
           {{ cat.name }}
         </option>
       </select>
@@ -94,7 +97,9 @@
         [(ngModel)]="transmission"
         name="transmission"
         class="border p-2 rounded w-full"
+        required
       >
+        <option value="" disabled>Select transmission</option>
         <option *ngFor="let trans of transmissions" [value]="trans">
           {{ trans }}
         </option>
@@ -106,7 +111,9 @@
         [(ngModel)]="fuelType"
         name="fuelType"
         class="border p-2 rounded w-full"
+        required
       >
+        <option value="" disabled>Select fuel type</option>
         <option *ngFor="let fuel of fuelTypes" [value]="fuel">
           {{ fuel }}
         </option>
@@ -130,7 +137,7 @@
     <input
       [(ngModel)]="location"
       name="location"
-      placeholder="e.g. San Francisco, CA"
+      placeholder="e.g. Nairobi, Kenya"
       class="border p-2 rounded w-full"
       required
     />
@@ -144,13 +151,12 @@
       rows="4"
       placeholder="Describe your car, its condition, and any notable details..."
       class="border p-2 rounded w-full"
-      required
     ></textarea>
   </div>
 
   <button
     type="submit"
-    [disabled]="uploading"
+    [disabled]="uploading || !category"
     class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
   >
     {{ uploading ? 'Uploading...' : '✓ List Your Car' }}

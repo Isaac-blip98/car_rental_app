@@ -37,6 +37,7 @@ model VehicleCategory {
   name        String    @unique
   description String?
   vehicles    Vehicle[]
+
 }
 
 model VehicleFeature {
@@ -56,6 +57,10 @@ model VehicleFeatureMapping {
 model Vehicle {
   id           String                  @id @default(uuid())
   title        String
+  brand         String                 @default("BMW")
+  model         String                @default("M6")
+  year          Int                   @default(0)
+  seatingCapacity  Int                @default(0)
   description  String?
   location     String
   dailyRate    Float
@@ -66,11 +71,12 @@ model Vehicle {
   ac           Boolean                 @default(true)
   createdAt    DateTime                @default(now())
   updatedAt    DateTime                @updatedAt
-  categoryId   String
   availability Availability[]
   bookings     Booking[]
   reviews      Review[]
-  category     VehicleCategory         @relation(fields: [categoryId], references: [id])
+  categoryId     String
+  category     VehicleCategory        @relation(fields: [categoryId], references: [id])
+
   features     VehicleFeatureMapping[]
   images       VehicleImage[]
 }

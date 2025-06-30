@@ -5,6 +5,7 @@ import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/common/enums/roles.enum';
 import { CreateAgentDto } from './dtos/create-agent.dto';
+import { SystemStats } from './interfaces/system-stats.interface';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(Role.ADMIN)
@@ -13,7 +14,7 @@ export class AdminController {
   constructor(private adminService: AdminService) {}
 
   @Get('stats')
-  getStats() {
+  getStats(): Promise<SystemStats> {
     return this.adminService.getStats();
   }
 

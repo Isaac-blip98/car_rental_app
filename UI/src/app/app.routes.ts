@@ -4,6 +4,7 @@ import { CarsPage } from './pages/car_page/car.page';
 import { CarDetailPage } from './pages/car_page/car_details/car-detail.page';
 import { LoginPage } from './auth/Login/login.page';
 import { AdminDashboardPage } from './admin/dashboard/dashboard.page';
+import { AuthGuard } from '../guards/auth.guards';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -12,7 +13,15 @@ export const routes: Routes = [
   { path: 'cars/:id', component: CarDetailPage },
   { path: 'login', component: LoginPage },
   {
+    path: 'register',
+    loadComponent: () =>
+      import('./auth/register/register.page').then((m) => m.RegisterPage),
+  },
+
+  {
     path: 'dashboard',
+    canActivate: [AuthGuard], 
+    data: { roles: ['ADMIN', 'AGENT'] }, 
     component: AdminDashboardPage,
     children: [
       {
@@ -23,19 +32,19 @@ export const routes: Routes = [
           ),
       },
 
-        {
-          path: 'vehicles',
-          loadComponent: () =>
-            import('./admin/vehicles/vehicles.page').then((m) => m.VehiclesPage),
-        },
-      // {
-      //       path: 'categories',
-      //       loadComponent: () => import('./admin/categories/categories.page').then(m => m.CategoriesPage),
-      //     },
-      //     {
-      //       path: 'bookings',
-      //       loadComponent: () => import('./admin/bookings/bookings.page').then(m => m.BookingsPage),
-      //     }
+      {
+        path: 'vehicles',
+        loadComponent: () =>
+          import('./admin/vehicles/vehicles.page').then((m) => m.VehiclesPage),
+      },
+
+      {
+        path: 'manage-cars',
+        loadComponent: () =>
+          import('./admin/manage-cars/manage-cars.component').then(
+            (m) => m.ManageCarsComponent
+          ),
+      },
     ],
   },
 ];

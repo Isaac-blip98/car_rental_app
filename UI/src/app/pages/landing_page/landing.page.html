@@ -1,5 +1,4 @@
 <div class="min-h-screen flex flex-col">
-
   <header class="bg-white shadow p-4 flex justify-between items-center">
     <div class="flex items-center gap-2">
       <i class="fa-solid fa-car text-blue-600"></i>
@@ -17,10 +16,19 @@
       <div class="border rounded-lg flex items-center">
         <input type="text" /><i class="fa-solid fa-magnifying-glass"></i>
       </div>
-      <a routerLink="/login" class="text-gray-700 hover:text-blue-500">Login</a>
-      <a routerLink="/register" class="text-gray-700 hover:text-blue-500"
-        >Register</a
-      >
+      <ng-container *ngIf="isLoggedIn(); else loggedOut">
+        <span class="text-gray-700">Welcome, {{ currentUser?.name }}</span>
+        <a (click)="logout()" class="text-red-600 hover:underline">Logout</a>
+      </ng-container>
+
+      <ng-template #loggedOut>
+        <a routerLink="/login" class="text-gray-700 hover:text-blue-500"
+          >Login</a
+        >
+        <a routerLink="/register" class="text-gray-700 hover:text-blue-500"
+          >Register</a
+        >
+      </ng-template>
     </nav>
   </header>
 
@@ -97,38 +105,38 @@
       >
     </div>
 
-<div
-  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10 px-6"
->
-  <div *ngFor="let car of featuredCars">
     <div
-      class="bg-white rounded-xl shadow-lg overflow-hidden transition-transform hover:scale-105"
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10 px-6"
     >
-      <img
-        [src]="car.imageUrls?.[0] || '/placeholder.jpg'"
-        alt="{{ car.title }}"
-        class="w-full h-48 object-cover"
-      />
-      <div class="p-4">
-        <h2 class="text-xl font-bold text-gray-800 mb-1">
-          {{ car.title }}
-        </h2>
-        <p class="text-gray-500 mb-1">{{ car.location }}</p>
-        <p class="text-green-600 font-semibold text-lg">
-          {{ car.dailyRate | currency:'KES':'symbol':'1.0-0' }}/day
-        </p>
+      <div *ngFor="let car of featuredCars">
+        <div
+          class="bg-white rounded-xl shadow-lg overflow-hidden transition-transform hover:scale-105"
+        >
+          <img
+            [src]="car.imageUrls?.[0] || '/placeholder.jpg'"
+            alt="{{ car.title }}"
+            class="w-full h-48 object-cover"
+          />
+          <div class="p-4">
+            <h2 class="text-xl font-bold text-gray-800 mb-1">
+              {{ car.title }}
+            </h2>
+            <p class="text-gray-500 mb-1">{{ car.location }}</p>
+            <p class="text-green-600 font-semibold text-lg">
+              {{ car.dailyRate | currency:'KES':'symbol':'1.0-0' }}/day
+            </p>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
-<div class="text-center mt-8">
-  <a
-    routerLink="/cars"
-    class="inline-block bg-blue-600 text-white px-6 py-2 rounded-full shadow hover:bg-blue-700 transition"
-  >
-    Explore All Cars
-  </a>
-</div>
+    <div class="text-center mt-8">
+      <a
+        routerLink="/cars"
+        class="inline-block bg-blue-600 text-white px-6 py-2 rounded-full shadow hover:bg-blue-700 transition"
+      >
+        Explore All Cars
+      </a>
+    </div>
   </section>
 </div>

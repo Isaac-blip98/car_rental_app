@@ -4,11 +4,10 @@ import {
   Body,
   Get,
   Param,
-  UploadedFiles,
-  UseInterceptors,
   UseGuards,
+  Patch,
+  Delete,
 } from '@nestjs/common';
-import { FilesInterceptor } from '@nestjs/platform-express';
 import { VehicleService } from './vehicle.service';
 import { CreateVehicleDto } from './dtos/create-vehicle.dto';
 import { VehicleResponseDto } from './dtos/vehicle-response.dto';
@@ -24,12 +23,10 @@ export class VehicleController {
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.AGENT)
-  @UseInterceptors(FilesInterceptor('images')) 
   create(
-    @Body() dto: CreateVehicleDto,
-    @UploadedFiles() images: Express.Multer.File[],
+    @Body() dto: CreateVehicleDto & { imageUrls: string[] },
   ): Promise<VehicleResponseDto> {
-    return this.vehicleService.create(dto, images);
+    return this.vehicleService.create(dto);
   }
 
   @Get()
@@ -40,5 +37,17 @@ export class VehicleController {
   @Get(':id')
   findOne(@Param('id') id: string): Promise<VehicleResponseDto> {
     return this.vehicleService.findOne(id);
+  }
+  @Delete(':id')
+  delete(@Param('id') id: string) {
+    return this.vehicleService.delete(id);
+  }
+
+  @Patch(':id/availability')
+  updateAvailability(
+    @Param('id') id: string,
+    @Body() body: { isAvailable: boolean },
+  ) {
+    return this.vehicleService.updateAvailability(id, body.isAvailable);
   }
 }

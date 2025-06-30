@@ -1,12 +1,24 @@
 import { FuelType, Transmission } from '@prisma/client';
-import { IsString, IsBoolean, IsNumber, IsEnum } from 'class-validator';
+import { IsString, IsBoolean, IsNumber, IsEnum, IsArray, IsOptional } from 'class-validator';
 
 export class CreateVehicleDto {
   @IsString()
   title: string;
 
   @IsString()
+  brand: string;
+
+  @IsString()
   location: string;
+
+  @IsString()
+  model: string;
+
+  @IsNumber()
+  year: number;
+
+  @IsNumber()
+  seatingCapacity: number;
 
   @IsNumber()
   dailyRate: number;
@@ -31,4 +43,9 @@ export class CreateVehicleDto {
 
   @IsString()
   description?: string;
+
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  imageUrls?: string[];
 }

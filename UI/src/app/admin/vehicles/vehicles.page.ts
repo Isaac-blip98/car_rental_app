@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpBackend, HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { CategoryService } from '../../services/category.service';
 
 @Component({
   selector: 'app-vehicles-page',
@@ -10,12 +12,13 @@ import { HttpClient } from '@angular/common/http';
   imports: [CommonModule, FormsModule],
   templateUrl: './vehicles.page.html',
 })
-export class VehiclesPage {
+export class VehiclesPage implements OnInit {
+  categories: any[] = [];
   brand = '';
   model = '';
   year!: number;
   dailyRate!: number;
-  category = '';
+  category: string | null = null; 
   fuelType = '';
   transmission = '';
   seatingCapacity!: number;
@@ -23,28 +26,25 @@ export class VehiclesPage {
   description = '';
   imageUrls: string[] = [];
 
-  categories: any[] = [];
   fuelTypes = ['Petrol', 'Diesel', 'Electric', 'Hybrid'];
   transmissions = ['Automatic', 'Manual'];
 
   uploading = false;
   uploadError = '';
-  cloudName = 'YOUR_CLOUD_NAME';
-  uploadPreset = 'YOUR_UPLOAD_PRESET';
+  cloudName = 'dxi37omp3';
+  uploadPreset = 'car_rental_Uploads';
 
-  constructor(private http: HttpClient, private router: Router) {
-    this.fetchCategories();
-  }
+  formError: string | null = null; // Add error message for validation
 
-  fetchCategories() {
-    this.http.get<any[]>('/api/vehicle-categories').subscribe({
-      next: (data) => {
-        this.categories = data;
-      },
-      error: (err) => {
-        console.error('Failed to fetch categories:', err);
-      },
-    });
+  private rawHttp: HttpClient;
+
+  constructor(
+    private categoryService: CategoryService,
+    private http: HttpClient,
+    private router: Router,
+    private handler: HttpBackend
+  ) {
+    this.rawHttp = new HttpClient(handler);
   }
 
   onImageSelected(event: any) {
@@ -60,8 +60,11 @@ export class VehiclesPage {
       formData.append('file', file);
       formData.append('upload_preset', this.uploadPreset);
 
-      this.http
-        .post(`https://api.cloudinary.com/v1_1/${this.cloudName}/upload`, formData)
+      this.rawHttp
+        .post(
+          `https://api.cloudinary.com/v1_1/${this.cloudName}/upload`,
+          formData
+        )
         .subscribe({
           next: (res: any) => {
             this.imageUrls.push(res.secure_url);
@@ -77,25 +80,54 @@ export class VehiclesPage {
     });
   }
 
+  ngOnInit() {
+    this.categoryService.getCategories().subscribe({
+      next: (data: any) => {
+        this.categories = data;
+      },
+      error: () => {
+        this.formError = 'Failed to load categories.';
+      },
+    });
+  }
+
   submitVehicle() {
+    // Validate form fields
+    if (!this.category) {
+      this.formError = 'Please select a category.';
+      return;
+    }
+    if (!this.brand || !this.model || !this.year || !this.dailyRate || !this.seatingCapacity || !this.location || !this.fuelType || !this.transmission) {
+      this.formError = 'Please fill in all required fields.';
+      return;
+    }
+
     const payload = {
       title: `${this.brand} ${this.model}`,
       brand: this.brand,
       model: this.model,
       year: this.year,
       dailyRate: this.dailyRate,
-      category: this.category,
-      transmission: this.transmission,
-      fuelType: this.fuelType,
+      hourlyRate: this.dailyRate / 5,
+      categoryId: this.category, // Use selected category ID
+      transmission: this.transmission.toUpperCase(),
+      fuelType: this.fuelType.toUpperCase(),
       seatingCapacity: this.seatingCapacity,
       location: this.location,
       description: this.description,
       imageUrls: this.imageUrls,
     };
 
-    this.http.post('/api/vehicles', payload).subscribe(() => {
-      alert('Vehicle listed successfully!');
-      this.router.navigate(['/dashboard/categories']);
-    });
+    this.http
+      .post(`${environment.apiBaseUrl}/vehicles`, payload)
+      .subscribe({
+        next: () => {
+          alert('Vehicle listed successfully!');
+          this.router.navigate(['/dashboard/manage-cars']);
+        },
+        error: (err) => {
+          this.formError = err.error.message || 'Failed to list vehicle.';
+        },
+      });
   }
 }

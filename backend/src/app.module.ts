@@ -20,9 +20,10 @@ import { AdminController } from './admin/admin.controller';
 import { AdminService } from './admin/admin.service';
 import { AdminModule } from './admin/admin.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { UploadModule } from './uploads/upload.module';
 
 @Module({
-  imports: [PrismaModule, UserModule, AuthModule, VehicleModule, BookingModule, VehicleFeatureModule, VehicleCategoryModule, AdminModule, CloudinaryModule],
+  imports: [PrismaModule, UserModule, AuthModule, VehicleModule, BookingModule, VehicleFeatureModule, VehicleCategoryModule, AdminModule, CloudinaryModule,],
   controllers: [AppController, VehicleController, BookingController, VehicleCategoryController, VehicleFeatureController, AdminController],
   providers: [AppService, VehicleService, BookingService, VehicleCategoryService, VehicleFeatureService, AdminService],
 })
