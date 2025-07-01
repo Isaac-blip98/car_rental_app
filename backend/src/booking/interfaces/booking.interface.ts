@@ -1,4 +1,18 @@
-import { BookingStatus } from '@prisma/client';
+import { BookingStatus } from "@prisma/client";
+
+export interface VehicleSummary {
+  id: string;
+  name: string;
+  image: string;
+  brand: string;
+  model: string;
+  fuelType: string;
+  transmission: string;
+  location: string;
+  category: string;
+  features: string[];
+  images: string[];
+}
 
 export interface IBooking {
   id: string;
@@ -10,4 +24,5 @@ export interface IBooking {
   isInstant: boolean;
   createdAt: Date;
   updatedAt: Date;
+  vehicle: VehicleSummary;
 }

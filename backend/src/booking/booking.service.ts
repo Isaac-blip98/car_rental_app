@@ -12,36 +12,28 @@ import { BookingStatus } from '@prisma/client';
 export class BookingService {
   constructor(private prisma: PrismaService) {}
 
-  async create(dto: CreateBookingDto, userId: string): Promise<BookingResponseDto> {
+  async create(
+    dto: CreateBookingDto,
+    userId: string,
+  ): Promise<BookingResponseDto> {
     const startDate = new Date(dto.startDate);
     const endDate = new Date(dto.endDate);
 
     const vehicle = await this.prisma.vehicle.findUnique({
       where: { id: dto.vehicleId },
     });
-
-    if (!vehicle) {
-      throw new NotFoundException('Vehicle not found');
-    }
-
-    if (!vehicle.isAvailable) {
+    if (!vehicle) throw new NotFoundException('Vehicle not found');
+    if (!vehicle.isAvailable)
       throw new ForbiddenException('Vehicle is currently unavailable');
-    }
 
     const overlappingBooking = await this.prisma.booking.findFirst({
       where: {
         vehicleId: dto.vehicleId,
-        status: {
-          in: ['PENDING', 'APPROVED'],
-        },
+        status: { in: ['PENDING', 'APPROVED'] },
         OR: [
           {
-            startDate: {
-              lte: endDate,
-            },
-            endDate: {
-              gte: startDate,
-            },
+            startDate: { lte: endDate },
+            endDate: { gte: startDate },
           },
         ],
       },
@@ -59,6 +51,20 @@ export class BookingService {
         endDate,
         isInstant: dto.isInstant,
       },
+      include: {
+        vehicle: {
+          include: {
+            category: true,
+            images: true,
+            features: {
+              include: {
+                feature: true,
+              },
+            },
+          },
+        },
+        payment: true,
+      },
     });
 
     return new BookingResponseDto(booking);
@@ -66,13 +72,45 @@ export class BookingService {
 
   async findAllBookings(): Promise<BookingResponseDto[]> {
     const bookings = await this.prisma.booking.findMany({
-      include: { vehicle: true, user: true },
+      orderBy: { createdAt: 'desc' },
+      include: {
+        vehicle: {
+          include: {
+            category: true,
+            images: true,
+            features: {
+              include: {
+                feature: true,
+              },
+            },
+          },
+        },
+        payment: true,
+      },
     });
+
     return bookings.map((b) => new BookingResponseDto(b));
   }
 
   async findById(id: string): Promise<BookingResponseDto> {
-    const booking = await this.prisma.booking.findUnique({ where: { id } });
+    const booking = await this.prisma.booking.findUnique({
+      where: { id },
+      include: {
+        vehicle: {
+          include: {
+            category: true,
+            images: true,
+            features: {
+              include: {
+                feature: true,
+              },
+            },
+          },
+        },
+        payment: true,
+      },
+    });
+
     if (!booking) throw new NotFoundException('Booking not found');
     return new BookingResponseDto(booking);
   }
@@ -80,9 +118,24 @@ export class BookingService {
   async findMyBookings(userId: string): Promise<BookingResponseDto[]> {
     const bookings = await this.prisma.booking.findMany({
       where: { userId },
-      include: { vehicle: true },
+      orderBy: { createdAt: 'desc' },
+      include: {
+        vehicle: {
+          include: {
+            category: true,
+            images: true,
+            features: {
+              include: {
+                feature: true,
+              },
+            },
+          },
+        },
+        payment: true,
+      },
     });
-    return bookings.map((b) => new BookingResponseDto(b));
+
+    return bookings.map((booking) => new BookingResponseDto(booking));
   }
 
   async updateStatus(
@@ -92,6 +145,20 @@ export class BookingService {
     const booking = await this.prisma.booking.update({
       where: { id },
       data: { status },
+      include: {
+        vehicle: {
+          include: {
+            category: true,
+            images: true,
+            features: {
+              include: {
+                feature: true,
+              },
+            },
+          },
+        },
+        payment: true,
+      },
     });
 
     return new BookingResponseDto(booking);
@@ -108,13 +175,43 @@ export class BookingService {
         vehicleId: params.vehicleId,
         status: params.status,
       },
+      include: {
+        vehicle: {
+          include: {
+            category: true,
+            images: true,
+            features: {
+              include: {
+                feature: true,
+              },
+            },
+          },
+        },
+        payment: true,
+      },
     });
 
     return bookings.map((b) => new BookingResponseDto(b));
   }
 
   async cancelBooking(id: string, user: any): Promise<BookingResponseDto> {
-    const booking = await this.prisma.booking.findUnique({ where: { id } });
+    const booking = await this.prisma.booking.findUnique({
+      where: { id },
+      include: {
+        vehicle: {
+          include: {
+            category: true,
+            images: true,
+            features: {
+              include: {
+                feature: true,
+              },
+            },
+          },
+        },
+        payment: true,
+      },
+    });
 
     if (!booking) throw new NotFoundException('Booking not found');
 
@@ -131,8 +228,8 @@ export class BookingService {
 
     const now = new Date();
     const startTime = new Date(booking.startDate);
-    const diffInMs = startTime.getTime() - now.getTime();
-    const diffInHours = diffInMs / (1000 * 60 * 60);
+    const diffInHours =
+      (startTime.getTime() - now.getTime()) / (1000 * 60 * 60);
 
     if (diffInHours < 1) {
       throw new ForbiddenException(
@@ -143,6 +240,20 @@ export class BookingService {
     const cancelled = await this.prisma.booking.update({
       where: { id },
       data: { status: 'CANCELLED' },
+      include: {
+        vehicle: {
+          include: {
+            category: true,
+            images: true,
+            features: {
+              include: {
+                feature: true,
+              },
+            },
+          },
+        },
+        payment: true,
+      },
     });
 
     return new BookingResponseDto(cancelled);
@@ -152,7 +263,22 @@ export class BookingService {
     const booking = await this.prisma.booking.update({
       where: { id },
       data: { status: 'APPROVED' },
+      include: {
+        vehicle: {
+          include: {
+            category: true,
+            images: true,
+            features: {
+              include: {
+                feature: true,
+              },
+            },
+          },
+        },
+        payment: true,
+      },
     });
+
     return new BookingResponseDto(booking);
   }
 
@@ -160,7 +286,22 @@ export class BookingService {
     const booking = await this.prisma.booking.update({
       where: { id },
       data: { status: 'REJECTED' },
+      include: {
+        vehicle: {
+          include: {
+            category: true,
+            images: true,
+            features: {
+              include: {
+                feature: true,
+              },
+            },
+          },
+        },
+        payment: true,
+      },
     });
+
     return new BookingResponseDto(booking);
   }
 }

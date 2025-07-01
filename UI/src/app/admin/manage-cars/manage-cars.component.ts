@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { VehicleService } from '../../services/vehicle.service';
-import { Vehicle } from '../../interfaces/vehicle.interface';
+import { IVehicle } from '../../interfaces/vehicle.interface';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -10,13 +10,13 @@ import { CommonModule } from '@angular/common';
   templateUrl: './manage-cars.component.html',
 })
 export class ManageCarsComponent implements OnInit {
-  vehicles: Vehicle[] = [];
+  vehicles: IVehicle[] = [];
 
   constructor(private vehicleService: VehicleService) {}
 
   ngOnInit(): void {
     this.vehicleService.getVehicles().subscribe({
-      next: (data: Vehicle[]) => (this.vehicles = data),
+      next: (data: IVehicle[]) => (this.vehicles = data),
       error: (err: string) => console.error(err),
     });
   }
@@ -32,7 +32,7 @@ export class ManageCarsComponent implements OnInit {
     }
   }
 
-  toggleAvailability(vehicle: Vehicle) {
+  toggleAvailability(vehicle: IVehicle) {
     const newStatus = !vehicle.isAvailable;
 
     this.vehicleService.toggleAvailability(vehicle.id, newStatus).subscribe({

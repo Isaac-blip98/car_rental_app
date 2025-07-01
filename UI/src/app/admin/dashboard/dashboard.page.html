@@ -17,7 +17,7 @@
     </div>
     <a
       *ngIf="!currentUser"
-      routerLink="/login"
+      (click)="modalService.openLogin()"
       class="text-gray-700 hover:text-blue-500"
       >Login</a
     >

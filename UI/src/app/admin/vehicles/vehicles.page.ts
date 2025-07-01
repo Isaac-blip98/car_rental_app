@@ -34,7 +34,7 @@ export class VehiclesPage implements OnInit {
   cloudName = 'dxi37omp3';
   uploadPreset = 'car_rental_Uploads';
 
-  formError: string | null = null; // Add error message for validation
+  formError: string | null = null; 
 
   private rawHttp: HttpClient;
 
@@ -92,7 +92,7 @@ export class VehiclesPage implements OnInit {
   }
 
   submitVehicle() {
-    // Validate form fields
+
     if (!this.category) {
       this.formError = 'Please select a category.';
       return;
@@ -109,7 +109,7 @@ export class VehiclesPage implements OnInit {
       year: this.year,
       dailyRate: this.dailyRate,
       hourlyRate: this.dailyRate / 5,
-      categoryId: this.category, // Use selected category ID
+      categoryId: this.category,
       transmission: this.transmission.toUpperCase(),
       fuelType: this.fuelType.toUpperCase(),
       seatingCapacity: this.seatingCapacity,
