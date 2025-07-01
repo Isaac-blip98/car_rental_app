@@ -1,1 +1,5 @@
+<app-register-modal *ngIf="authModal.register$ | async"></app-register-modal>
+<app-login-modal *ngIf="authModal.login$ | async"></app-login-modal>
+
 <router-outlet></router-outlet>
+<app-footer></app-footer>

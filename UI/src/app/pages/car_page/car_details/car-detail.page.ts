@@ -19,6 +19,7 @@ export class CarDetailPage implements OnInit {
   };
   pickupDate = '';
   returnDate = '';
+  isBooking = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -27,56 +28,66 @@ export class CarDetailPage implements OnInit {
     private authService: AuthService
   ) {}
 
-bookNow() {
-  const user = this.authService.getCurrentUser();
+  ngOnInit() {
+    this.carId = this.route.snapshot.paramMap.get('id') || '';
+    if (this.carId) {
+      this.vehicleService.getVehicleById(this.carId).subscribe((res) => {
+        this.car = res;
+      });
+    }
+  }
 
-  if (!user?.id) {
-    this.router.navigate(['/login'], {
-      queryParams: { returnUrl: this.router.url },
+  bookNow() {
+    const user = this.authService.getCurrentUser();
+    const userId = user?.id || user?.userId;
+
+    if (!userId) {
+      this.router.navigate(['/login'], {
+        queryParams: { returnUrl: this.router.url },
+      });
+      return;
+    }
+
+    if (!this.pickupDate || !this.returnDate) {
+      alert('Please select both pickup and return dates.');
+      return;
+    }
+
+    if (new Date(this.pickupDate) >= new Date(this.returnDate)) {
+      alert('Return date must be after pickup date.');
+      return;
+    }
+
+    const booking = {
+      vehicleId: this.carId,
+      startDate: this.pickupDate,
+      endDate: this.returnDate,
+      isInstant: true,
+    };
+
+    this.isBooking = true;
+    this.vehicleService.bookCar(booking).subscribe({
+      next: () => {
+        this.successMessage = '🎉 Booking successful! Redirecting to My Bookings...';
+        setTimeout(() => {
+          this.router.navigate(['/mybookings']);
+        }, 2000);
+        this.isBooking = false;
+      },
+      error: (err) => {
+        console.error('Booking failed', err);
+        const message =
+          err?.error?.message || 'Booking failed. Please try again later.';
+        alert(message);
+        this.isBooking = false;
+      },
     });
-    return;
   }
-
-  if (!this.pickupDate || !this.returnDate) {
-    alert('Please select both pickup and return dates.');
-    return;
-  }
-
-  const booking = {
-    vehicleId: this.car.id,
-    startDate: this.pickupDate,
-    endDate: this.returnDate,
-    isInstant: true,
-  };
-
-  this.vehicleService.bookCar(booking).subscribe({
-    next: () => {
-      this.successMessage = '🎉 Booking successful! Redirecting to My Bookings...';
-      setTimeout(() => {
-        this.router.navigate(['/mybookings']);
-      }, 2000);
-    },
-    error: (err) => {
-      console.error('Booking failed', err);
-      alert('Booking failed. Please try again later.');
-    },
-  });
-}
-
 
   calculateTotalPrice(): number {
     const start = new Date(this.pickupDate);
     const end = new Date(this.returnDate);
     const days = (end.getTime() - start.getTime()) / (1000 * 3600 * 24);
-    return days * this.car.dailyRate;
-  }
-
-  ngOnInit() {
-    const carId = this.route.snapshot.paramMap.get('id');
-    if (carId) {
-      this.vehicleService.getVehicleById(carId).subscribe((res) => {
-        this.car = res;
-      });
-    }
+    return days > 0 ? days * this.car.dailyRate : 0;
   }
 }

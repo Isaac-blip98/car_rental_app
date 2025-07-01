@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { AdminService } from '../../services/admin.service';
 import { SystemStats } from '../../interfaces/system-stats.interface';
 import { AuthService } from '../../services/auth.service';
+import { ModalService } from '../../shared/services/auth-modal,service';
 
 @Component({
   standalone: true,
@@ -16,7 +17,7 @@ export class AdminDashboardPage implements OnInit {
   stats: SystemStats | null = null;
   loading = true;
 
-  constructor(private adminService: AdminService, private auth: AuthService, private router: Router) {}
+  constructor(private adminService: AdminService, private auth: AuthService, private router: Router, public modalService: ModalService) {}
 
   ngOnInit() {
     this.currentUser = this.auth.getCurrentUser();

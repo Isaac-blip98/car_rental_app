@@ -20,17 +20,18 @@ export class VehicleService {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
 
-  toggleAvailability(id: string, isAvailable: boolean) {
-    return this.http.patch(`${this.baseUrl}/${id}/availability`, {
-      isAvailable,
-    });
-  }
+toggleAvailability(id: string, isAvailable: boolean): Observable<any> {
+  return this.http.patch(`${this.baseUrl}/vehicles/${id}/availability`, {
+    isAvailable,
+  });
+}
+
   bookCar(data: {
     vehicleId: string;
     startDate: string;
     endDate: string;
     isInstant?: boolean;
   }) {
-    return this.http.post('/api/bookings', data);
+    return this.http.post(`${this.baseUrl}/bookings`, data);
   }
 }

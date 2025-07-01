@@ -22,10 +22,10 @@
       </ng-container>
 
       <ng-template #loggedOut>
-        <a routerLink="/login" class="text-gray-700 hover:text-blue-500"
+        <a  (click)="authModal.openLogin()"class="text-gray-700 hover:text-blue-500"
           >Login</a
         >
-        <a routerLink="/register" class="text-gray-700 hover:text-blue-500"
+        <a (click)="authModal.openRegister()" class="text-gray-700 hover:text-blue-500"
           >Register</a
         >
       </ng-template>
@@ -138,5 +138,26 @@
         Explore All Cars
       </a>
     </div>
+    <section
+      class="bg-gradient-to-r from-blue-700 to-blue-400 text-white rounded-lg p-8 my-12 flex flex-col md:flex-row items-center justify-between"
+    >
+      <div class="md:w-1/2 mb-6 md:mb-0">
+        <h2 class="text-2xl font-bold mb-2">About CarRental</h2>
+        <p class="text-sm leading-relaxed">
+          CarRental is your trusted platform for booking luxury and everyday
+          cars effortlessly. We provide exceptional service, verified drivers,
+          and seamless bookings so you can drive with peace of mind. Whether
+          you're looking for convenience or comfort, we've got the vehicle for
+          your journey.
+        </p>
+      </div>
+      <div class="md:w-1/2 flex justify-center">
+        <img
+          src="/banner_car_image.png"
+          alt="About CarRental"
+          class="max-w-xs w-full rounded-lg"
+        />
+      </div>
+    </section>
   </section>
 </div>

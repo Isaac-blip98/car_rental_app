@@ -30,7 +30,11 @@ export class VehicleService {
       },
       include: {
         images: true,
-        category: true,
+        category: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
 

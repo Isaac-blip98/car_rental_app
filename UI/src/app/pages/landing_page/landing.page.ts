@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { VehicleService } from '../../services/vehicle.service';
 import { AuthService } from '../../services/auth.service';
+import { ModalService } from '../../shared/services/auth-modal,service';
+import { Subscription } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -11,10 +13,10 @@ import { AuthService } from '../../services/auth.service';
   imports: [FormsModule, RouterModule, CommonModule],
   templateUrl: './landing.page.html',
 })
-export class LandingPage implements OnInit {
+export class LandingPage implements OnInit, OnDestroy {
   currentUser: any = null;
+  userSub!: Subscription;
 
-  showLogin = false;
   email = '';
   password = '';
   errorMessage = '';
@@ -28,9 +30,22 @@ export class LandingPage implements OnInit {
     private router: Router,
     private vehicleService: VehicleService,
     private auth: AuthService,
-    private route: ActivatedRoute
-  ) {
-    this.currentUser = this.auth.getCurrentUser();
+    private route: ActivatedRoute,
+    public authModal: ModalService
+  ) {}
+
+  ngOnInit() {
+    this.userSub = this.auth.currentUser$.subscribe(user => {
+      this.currentUser = user;
+    });
+
+    this.vehicleService.getVehicles().subscribe((res) => {
+      this.featuredCars = res.slice(0, 3);
+    });
+  }
+
+  ngOnDestroy() {
+    this.userSub?.unsubscribe();
   }
 
   login() {
@@ -54,26 +69,14 @@ export class LandingPage implements OnInit {
         this.errorMessage = err.message || 'Invalid credentials';
       });
   }
+
   isLoggedIn() {
-    return !!localStorage.getItem('token');
+    return !!this.currentUser;
   }
 
   logout() {
     this.auth.logout();
-    this.currentUser = null;
     this.router.navigate(['/home']);
-  }
-
-  ngOnInit() {
-    this.loadUser();
-
-    this.vehicleService.getVehicles().subscribe((res) => {
-      this.featuredCars = res.slice(0, 3);
-    });
-  }
-
-  loadUser() {
-    this.currentUser = this.auth.getCurrentUser();
   }
 
   search() {

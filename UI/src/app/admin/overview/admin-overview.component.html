@@ -34,7 +34,7 @@
               <p class="text-sm text-gray-500">{{ booking.date }}</p>
             </div>
             <div class="text-right">
-              <p class="text-gray-700">{{ booking.amount | currency:'USD' }}</p>
+              <p class="text-gray-700">{{ booking.amount | currency:'Ksh' }}</p>
               <span class="text-sm px-2 py-1 rounded bg-gray-200">{{ booking.status }}</span>
             </div>
           </div>
@@ -44,7 +44,7 @@
 
     <div class="bg-white p-6 rounded shadow text-center">
       <h3 class="text-lg font-semibold mb-2">Monthly Revenue</h3>
-      <p class="text-4xl font-bold text-blue-600">${{ stats.totalRevenue }}</p>
+      <p class="text-4xl font-bold text-blue-600">Ksh{{ stats.totalRevenue }}</p>
       <p class="text-sm text-gray-500">Revenue for current month</p>
     </div>
   </div>

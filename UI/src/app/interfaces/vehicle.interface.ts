@@ -1,6 +1,10 @@
 export interface IVehicle {
   id: string;
   title: string;
+  brand: string;
+  model: string;
+  year: number;
+  seatingCapacity: number;
   description?: string;
   imageUrls: string[];
   location: string;
@@ -10,18 +14,7 @@ export interface IVehicle {
   fuelType: string;
   transmission: string;
   ac: boolean;
-  categoryId: string;
+  category?: string;
   createdAt: Date;
   updatedAt: Date;
-}
-
-export interface Vehicle {
-  id: string;
-  title: string;
-  imageUrls: string[];
-  transmission: string;
-  seatingCapacity: number;
-  category: string;
-  dailyRate: number;
-  isAvailable: boolean;
 }
