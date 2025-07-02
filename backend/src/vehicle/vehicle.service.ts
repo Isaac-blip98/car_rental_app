@@ -10,13 +10,16 @@ export class VehicleService {
   async create(
     dto: CreateVehicleDto & { imageUrls: string[] },
   ): Promise<VehicleResponseDto> {
-    const { imageUrls = [], categoryId, ...vehicleData } = dto;
+    const { imageUrls = [], categoryId, featureIds = [], ...vehicleData } = dto;
+
     const categoryRecord = await this.prisma.vehicleCategory.findUnique({
       where: { id: categoryId },
     });
+
     if (!categoryRecord) {
       throw new Error(`Category with ID '${categoryId}' not found`);
     }
+
     const vehicle = await this.prisma.vehicle.create({
       data: {
         ...vehicleData,
@@ -37,6 +40,12 @@ export class VehicleService {
         },
       },
     });
+
+    for (const featureId of featureIds) {
+      await this.prisma.vehicleFeatureMapping.create({
+        data: { vehicleId: vehicle.id, featureId },
+      });
+    }
 
     return new VehicleResponseDto(vehicle);
   }
@@ -71,5 +80,13 @@ export class VehicleService {
       where: { id },
       data: { isAvailable },
     });
+  }
+
+  createFeature(dto: { name: string }) {
+    return this.prisma.vehicleFeature.create({ data: dto });
+  }
+
+  async getAllFeatures() {
+    return this.prisma.vehicleFeature.findMany();
   }
 }

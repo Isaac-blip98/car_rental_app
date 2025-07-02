@@ -16,6 +16,8 @@ model User {
   name         String
   verified     Boolean            @default(false)
   profileImage String?
+  resetCode    String?          
+  resetCodeExpiresAt DateTime?  
   createdAt    DateTime           @default(now())
   updatedAt    DateTime           @updatedAt
   agentProfile AgentProfile?

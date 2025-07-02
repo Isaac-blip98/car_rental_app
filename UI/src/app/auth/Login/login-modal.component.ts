@@ -40,7 +40,7 @@ export class LoginModalComponent {
         setTimeout(() => {
           if (user.role === 'ADMIN') this.router.navigate(['/dashboard']);
           else if (user.role === 'AGENT')
-            this.router.navigate(['/agent/bookings']);
+            this.router.navigate(['/dashboard']);
           else this.router.navigate(['/home']);
         }, 0);
       })

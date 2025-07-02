@@ -3,6 +3,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { VehicleService } from '../../services/vehicle.service';
 import { AuthService } from '../../services/auth.service';
+import { ModalService } from '../../shared/services/auth-modal,service';
 
 @Component({
   standalone: true,
@@ -21,7 +22,8 @@ export class CarsPage implements OnInit {
     private route: ActivatedRoute,
     private vehicleService: VehicleService,
     private router: Router,
-    private auth: AuthService
+    private auth: AuthService,
+    public authModal: ModalService
   ) {}
 
   ngOnInit() {

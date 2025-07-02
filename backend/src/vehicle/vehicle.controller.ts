@@ -50,4 +50,15 @@ export class VehicleController {
   ) {
     return this.vehicleService.updateAvailability(id, body.isAvailable);
   }
+
+  @Post('/features')
+  @Roles(Role.ADMIN)
+  createFeature(@Body() body: { name: string }) {
+    return this.vehicleService.createFeature({ name: body.name });
+  }
+
+  @Get('/features')
+  getFeatures() {
+    return this.vehicleService.getAllFeatures();
+  }
 }
