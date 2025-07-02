@@ -18,13 +18,15 @@ export class VehiclesPage implements OnInit {
   model = '';
   year!: number;
   dailyRate!: number;
-  category: string | null = null; 
+  category: string | null = null;
   fuelType = '';
   transmission = '';
   seatingCapacity!: number;
   location = '';
   description = '';
   imageUrls: string[] = [];
+  features: any[] = [];
+  selectedFeatures: string[] = [];
 
   fuelTypes = ['Petrol', 'Diesel', 'Electric', 'Hybrid'];
   transmissions = ['Automatic', 'Manual'];
@@ -34,7 +36,7 @@ export class VehiclesPage implements OnInit {
   cloudName = 'dxi37omp3';
   uploadPreset = 'car_rental_Uploads';
 
-  formError: string | null = null; 
+  formError: string | null = null;
 
   private rawHttp: HttpClient;
 
@@ -89,15 +91,26 @@ export class VehiclesPage implements OnInit {
         this.formError = 'Failed to load categories.';
       },
     });
+    this.http.get(`${environment.apiBaseUrl}/vehicles/feature`).subscribe({
+      next: (data: any) => (this.features = data),
+    });
   }
 
   submitVehicle() {
-
     if (!this.category) {
       this.formError = 'Please select a category.';
       return;
     }
-    if (!this.brand || !this.model || !this.year || !this.dailyRate || !this.seatingCapacity || !this.location || !this.fuelType || !this.transmission) {
+    if (
+      !this.brand ||
+      !this.model ||
+      !this.year ||
+      !this.dailyRate ||
+      !this.seatingCapacity ||
+      !this.location ||
+      !this.fuelType ||
+      !this.transmission
+    ) {
       this.formError = 'Please fill in all required fields.';
       return;
     }
@@ -118,16 +131,14 @@ export class VehiclesPage implements OnInit {
       imageUrls: this.imageUrls,
     };
 
-    this.http
-      .post(`${environment.apiBaseUrl}/vehicles`, payload)
-      .subscribe({
-        next: () => {
-          alert('Vehicle listed successfully!');
-          this.router.navigate(['/dashboard/manage-cars']);
-        },
-        error: (err) => {
-          this.formError = err.error.message || 'Failed to list vehicle.';
-        },
-      });
+    this.http.post(`${environment.apiBaseUrl}/vehicles`, payload).subscribe({
+      next: () => {
+        alert('Vehicle listed successfully!');
+        this.router.navigate(['/dashboard/manage-cars']);
+      },
+      error: (err) => {
+        this.formError = err.error.message || 'Failed to list vehicle.';
+      },
+    });
   }
 }

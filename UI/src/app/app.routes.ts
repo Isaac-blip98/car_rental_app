@@ -48,6 +48,13 @@ export const routes: Routes = [
         path: 'bookings',
         component: ManageBookingsComponent,
       },
+      {
+        path: 'features',
+        loadComponent: () =>
+          import('./admin/manage-features/manage-features.page').then(
+            (m) => m.ManageFeaturesPage
+          ),
+      },
     ],
   },
 ];

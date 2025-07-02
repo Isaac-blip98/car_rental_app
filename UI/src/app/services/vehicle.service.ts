@@ -20,11 +20,11 @@ export class VehicleService {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
 
-toggleAvailability(id: string, isAvailable: boolean): Observable<any> {
-  return this.http.patch(`${this.baseUrl}/vehicles/${id}/availability`, {
-    isAvailable,
-  });
-}
+  toggleAvailability(id: string, isAvailable: boolean): Observable<any> {
+    return this.http.patch(`${this.baseUrl}/vehicles/${id}/availability`, {
+      isAvailable,
+    });
+  }
 
   bookCar(data: {
     vehicleId: string;
@@ -33,5 +33,13 @@ toggleAvailability(id: string, isAvailable: boolean): Observable<any> {
     isInstant?: boolean;
   }) {
     return this.http.post(`${this.baseUrl}/bookings`, data);
+  }
+
+  createFeature(dto: { name: string }) {
+    return this.http.post(`${environment.apiBaseUrl}/vehicles/feature`, dto);
+  }
+
+  getFeatures() {
+    return this.http.get(`${environment.apiBaseUrl}/vehicles/feature`);
   }
 }

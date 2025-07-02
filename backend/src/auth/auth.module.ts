@@ -4,6 +4,7 @@ import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from 'src/user/user.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { AppMailerModule } from 'src/mailer/mailer.module';
 
 @Module({
     imports: [
@@ -11,7 +12,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       secret: process.env.JWT_SECRET || 'changeme',
       signOptions: { expiresIn: '7d' },
     }),
-    UserModule,
+    UserModule, AppMailerModule
   ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController]

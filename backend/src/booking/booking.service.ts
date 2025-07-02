@@ -7,10 +7,11 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateBookingDto } from './dtos/create-booking.dto';
 import { BookingResponseDto } from './dtos/booking-response.dto';
 import { BookingStatus } from '@prisma/client';
+import { MailerService } from '../mailer/mailer.service';
 
 @Injectable()
 export class BookingService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private mailerService: MailerService, ) {}
 
   async create(
     dto: CreateBookingDto,
@@ -138,31 +139,39 @@ export class BookingService {
     return bookings.map((booking) => new BookingResponseDto(booking));
   }
 
-  async updateStatus(
-    id: string,
-    status: BookingStatus,
-  ): Promise<BookingResponseDto> {
-    const booking = await this.prisma.booking.update({
-      where: { id },
-      data: { status },
-      include: {
-        vehicle: {
-          include: {
-            category: true,
-            images: true,
-            features: {
-              include: {
-                feature: true,
-              },
-            },
+async updateStatus(id: string, status: BookingStatus): Promise<BookingResponseDto> {
+  const booking = await this.prisma.booking.update({
+    where: { id },
+    data: { status },
+    include: {
+      vehicle: {
+        include: {
+          category: true,
+          images: true,
+          features: {
+            include: { feature: true },
           },
         },
-        payment: true,
       },
-    });
+      user: true, // Make sure user is included so we can email them
+      payment: true,
+    },
+  });
 
-    return new BookingResponseDto(booking);
+  if (status === 'COMPLETED') {
+    const user = booking.user;
+    await this.mailerService.sendBookingCompletedEmail (
+      user.email,
+      user.name,
+      booking.vehicle.title,
+      booking.startDate,
+      booking.endDate,
+    );
   }
+
+  return new BookingResponseDto(booking);
+}
+
 
   async filterBookings(params: {
     userId?: string;

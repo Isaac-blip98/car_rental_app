@@ -14,7 +14,7 @@ async function main() {
     data: {
       email: adminEmail,
       password: hashedPassword,
-      name: 'Super Admin',
+      name: 'Elvis',
       role: Role.ADMIN,
       verified: true,
       profileImage: 'https://i.pravatar.cc/150?img=1',

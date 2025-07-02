@@ -142,6 +142,18 @@
       required
     />
   </div>
+  
+  <label class="block mb-2 text-sm font-medium text-gray-700">Features</label>
+  <select
+    multiple
+    [(ngModel)]="selectedFeatures"
+    name="features"
+    class="w-full border border-gray-300 rounded p-2"
+  >
+    <option *ngFor="let feature of features" [value]="feature.id">
+      {{ feature.name }}
+    </option>
+  </select>
 
   <div>
     <label class="block mb-1 text-gray-700">Description</label>
